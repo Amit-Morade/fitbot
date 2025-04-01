@@ -1,0 +1,11 @@
+{
+  "0": "affirm",
+  "1": "ask_full_body_workout",
+  "2": "ask_home_workout",
+  "3": "ask_leg_day_routine",
+  "4": "deny",
+  "5": "goodbye",
+  "6": "greet",
+  "7": "inform_duration",
+  "8": "inform_equipment"
+}

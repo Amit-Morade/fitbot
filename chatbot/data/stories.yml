@@ -1,0 +1,192 @@
+version: "3.1"
+
+stories:
+- story: home workout path
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: ask_home_workout
+  - action: utter_ask_equipment
+  - intent: inform_equipment
+    entities:
+    - equipment: dumbbells
+  - slot_was_set:
+    - equipment: dumbbells
+  - action: utter_ask_duration
+  - intent: inform_duration
+    entities:
+    - duration: "30"
+  - slot_was_set:
+    - duration: "30"
+  - action: action_recommend_workout
+
+- story: leg day path
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: ask_leg_day_routine
+  - action: action_extract_muscle_group
+  - slot_was_set:
+    - muscle_group: "legs"
+  - action: utter_ask_equipment
+  - intent: inform_equipment
+    entities:
+    - equipment: resistance bands
+  - slot_was_set:
+    - equipment: resistance bands
+  - action: utter_ask_duration
+  - intent: inform_duration
+    entities:
+    - duration: "45"
+  - slot_was_set:
+    - duration: "45"
+  - action: action_recommend_workout
+
+- story: full body path
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: ask_full_body_workout
+  - action: utter_ask_equipment
+  - intent: inform_equipment
+    entities:
+    - equipment: bodyweight
+  - slot_was_set:
+    - equipment: bodyweight
+  - action: utter_ask_duration
+  - intent: inform_duration
+    entities:
+    - duration: "20"
+  - slot_was_set:
+    - duration: "20"
+  - action: action_recommend_workout
+
+- story: muscle group specific workout
+  steps:
+  - intent: inform_muscle_group
+    entities:
+    - muscle_group: chest
+  - action: action_extract_muscle_group
+  - slot_was_set:
+    - muscle_group: chest
+  - action: utter_ask_equipment
+  - intent: inform_equipment
+    entities:
+    - equipment: dumbbells
+  - slot_was_set:
+    - equipment: dumbbells
+  - action: utter_ask_duration
+  - intent: inform_duration
+    entities:
+    - duration: "30"
+  - slot_was_set:
+    - duration: "30"
+  - action: action_recommend_workout
+
+- story: weight loss goal path
+  steps:
+  - intent: ask_weight_loss
+  - action: action_extract_fitness_goal
+  - slot_was_set:
+    - fitness_goal: weight_loss
+  - action: utter_ask_equipment
+  - intent: inform_equipment
+    entities:
+    - equipment: bodyweight
+  - slot_was_set:
+    - equipment: bodyweight
+  - action: utter_ask_duration
+  - intent: inform_duration
+    entities:
+    - duration: "30"
+  - slot_was_set:
+    - duration: "30"
+  - action: action_recommend_workout
+
+- story: muscle gain goal path
+  steps:
+  - intent: ask_muscle_gain
+  - action: action_extract_fitness_goal
+  - slot_was_set:
+    - fitness_goal: muscle_gain
+  - action: utter_ask_equipment
+  - intent: inform_equipment
+    entities:
+    - equipment: dumbbells
+  - slot_was_set:
+    - equipment: dumbbells
+  - action: utter_ask_duration
+  - intent: inform_duration
+    entities:
+    - duration: "45"
+  - slot_was_set:
+    - duration: "45"
+  - action: action_recommend_workout
+
+- story: endurance goal path
+  steps:
+  - intent: ask_endurance
+  - action: action_extract_fitness_goal
+  - slot_was_set:
+    - fitness_goal: endurance
+  - action: utter_ask_equipment
+  - intent: inform_equipment
+    entities:
+    - equipment: bodyweight
+  - slot_was_set:
+    - equipment: bodyweight
+  - action: utter_ask_duration
+  - intent: inform_duration
+    entities:
+    - duration: "40"
+  - slot_was_set:
+    - duration: "40"
+  - action: action_recommend_workout
+
+- story: direct muscle group mention
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: inform_muscle_group
+    entities:
+    - muscle_group: arms
+  - action: action_extract_muscle_group
+  - slot_was_set:
+    - muscle_group: arms
+  - action: utter_ask_equipment
+  - intent: inform_equipment
+    entities:
+    - equipment: resistance bands
+  - slot_was_set:
+    - equipment: resistance bands
+  - action: utter_ask_duration
+  - intent: inform_duration
+    entities:
+    - duration: "25"
+  - slot_was_set:
+    - duration: "25"
+  - action: action_recommend_workout
+
+- story: direct fitness goal mention
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: inform_fitness_goal
+    entities:
+    - fitness_goal: weight_loss
+  - action: action_extract_fitness_goal
+  - slot_was_set:
+    - fitness_goal: weight_loss
+  - action: utter_ask_equipment
+  - intent: inform_equipment
+    entities:
+    - equipment: bodyweight
+  - slot_was_set:
+    - equipment: bodyweight
+  - action: utter_ask_duration
+  - intent: inform_duration
+    entities:
+    - duration: "30"
+  - slot_was_set:
+    - duration: "30"
+  - action: action_recommend_workout

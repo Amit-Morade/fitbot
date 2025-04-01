@@ -1,0 +1,94 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - ask_home_workout
+  - ask_leg_day_routine
+  - ask_full_body_workout
+  - inform_equipment
+  - inform_duration
+  - inform_muscle_group
+  - inform_fitness_goal
+  - ask_weight_loss
+  - ask_muscle_gain
+  - ask_endurance
+
+entities:
+  - equipment
+  - duration
+  - muscle_group
+  - fitness_goal
+
+slots:
+  equipment:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: equipment
+  duration:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: duration
+  workout_type:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: custom
+  muscle_group:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: muscle_group
+    - type: custom
+  fitness_goal:
+    type: text
+    influence_conversation: true
+    mappings:
+    - type: from_entity
+      entity: fitness_goal
+    - type: custom
+
+responses:
+  utter_greet:
+  - text: "Hey! I'm FitBot, your AI fitness assistant. How can I help you with your workout today?"
+
+  utter_goodbye:
+  - text: "Have a great workout! Come back anytime for more fitness recommendations."
+
+  utter_ask_equipment:
+  - text: "What equipment do you have available? (e.g., dumbbells, resistance bands, bodyweight only)"
+
+  utter_ask_duration:
+  - text: "How much time do you have for your workout today? (in minutes)"
+
+  utter_ask_muscle_group:
+  - text: "Which muscle group would you like to focus on? (e.g., legs, arms, chest, back, core)"
+
+  utter_ask_fitness_goal:
+  - text: "What's your fitness goal? (weight loss, muscle gain, or endurance)"
+
+  utter_fallback:
+  - text: "I'm sorry, I didn't understand that. Could you rephrase or ask about specific workout types, muscle groups, or fitness goals?"
+
+actions:
+  - utter_greet
+  - utter_goodbye
+  - utter_ask_equipment
+  - utter_ask_duration
+  - utter_ask_muscle_group
+  - utter_ask_fitness_goal
+  - utter_fallback
+  - action_recommend_workout
+  - action_extract_muscle_group
+  - action_extract_fitness_goal
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

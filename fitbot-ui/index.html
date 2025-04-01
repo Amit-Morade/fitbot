@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitBot - AI Fitness Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --primary-light: #C8E6C9;
+            --accent: #FF5722;
+            --text: #212121;
+            --text-secondary: #757575;
+            --background: #f9f9f9;
+            --card-bg: #ffffff;
+            --divider: #BDBDBD;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        
+        .header-content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-content p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 20px;
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .workout-categories {
+            width: 280px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+        
+        .categories-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .categories-title i {
+            margin-right: 10px;
+        }
+        
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .category-button {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            text-align: left;
+        }
+        
+        .category-button:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .category-button i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .chat-container {
+            flex: 1;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            height: 70vh;
+            min-height: 500px;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            padding: 1rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .chat-header i {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        
+        .chat-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            position: relative;
+        }
+        
+        .message.bot {
+            align-self: flex-start;
+            background-color: #f0f2f5;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message.user {
+            align-self: flex-end;
+            background-color: var(--primary);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .chat-input-container {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--divider);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--divider);
+            border-radius: 24px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+        
+        .chat-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+        
+        .input-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn {
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.25rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-mic {
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+        }
+        
+        .btn-mic:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-mic.recording {
+            background-color: #f44336;
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .btn-send {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-send:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .workout-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        
+        .workout-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 16px;
+            font-weight: 600;
+        }
+        
+        .workout-info {
+            display: flex;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--primary-light);
+            gap: 10px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .workout-exercises {
+            padding: 10px 16px;
+        }
+        
+        .exercise-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .exercise-item:last-child {
+            border-bottom: none;
+        }
+        
+        .exercise-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary-dark);
+        }
+        
+        .exercise-detail {
+            font-size: 0.9rem;
+            margin-left: 15px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .exercise-detail i {
+            margin-right: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .workout-footer {
+            padding: 12px 16px;
+            background-color: #f9f9f9;
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Quick recommendations */
+        .quick-recommendations {
+            width: 280px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+        
+        .recommendations-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .recommendations-title i {
+            margin-right: 10px;
+        }
+        
+        .tip-card {
+            background-color: var(--primary-light);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .tip-header {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+        }
+        
+        .tip-body {
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .workout-categories, .quick-recommendations {
+                width: 100%;
+            }
+            
+            .chat-container {
+                height: 60vh;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2rem;
+            }
+            
+            .header-content p {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .header-content h1 {
+                font-size: 1.75rem;
+            }
+            
+            .main-content {
+                padding: 1rem 15px;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="header-content">
+                <h1><i class="fas fa-dumbbell"></i> FitBot</h1>
+                <p>Your AI-Powered Fitness Assistant</p>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="workout-categories">
+                <div class="categories-title">
+                    <i class="fas fa-list"></i> Workout Categories
+                </div>
+                <div class="category-list">
+                    <button class="category-button" data-query="home workout">
+                        <i class="fas fa-home"></i> Home Workout
+                    </button>
+                    <button class="category-button" data-query="leg day">
+                        <i class="fas fa-walking"></i> Leg Day
+                    </button>
+                    <button class="category-button" data-query="full body workout">
+                        <i class="fas fa-user"></i> Full Body
+                    </button>
+                    <button class="category-button" data-query="I want to lose weight">
+                        <i class="fas fa-weight"></i> Weight Loss
+                    </button>
+                    <button class="category-button" data-query="I want to build muscle">
+                        <i class="fas fa-dumbbell"></i> Muscle Gain
+                    </button>
+                    <button class="category-button" data-query="I need to improve my endurance">
+                        <i class="fas fa-heartbeat"></i> Endurance
+                    </button>
+                </div>
+            </div>
+            
+            <div class="chat-container">
+                <div class="chat-header">
+                    <i class="fas fa-robot"></i>
+                    <h2>Chat with FitBot</h2>
+                </div>
+                
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Messages will be added here dynamically -->
+                </div>
+                
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chat-input" placeholder="Type your fitness question here...">
+                    <div class="input-buttons">
+                        <button class="btn btn-mic" id="mic-button">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button class="btn btn-send" id="send-button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quick-recommendations">
+                <div class="recommendations-title">
+                    <i class="fas fa-lightbulb"></i> Fitness Tips
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-header">Proper Hydration</div>
+                    <div class="tip-body">Drink water before, during, and after your workout to stay hydrated and maintain performance.</div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-header">Form Over Weight</div>
+                    <div class="tip-body">Always prioritize proper form over lifting heavier weights to prevent injuries and maximize results.</div>
+                </div>
+                
+                <div class="tip-card">
+                    <div class="tip-header">Rest Days Matter</div>
+                    <div class="tip-body">Include rest days in your routine. They're essential for muscle recovery and growth.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInput = document.getElementById('chat-input');
+            const sendButton = document.getElementById('send-button');
+            const micButton = document.getElementById('mic-button');
+            const categoryButtons = document.querySelectorAll('.category-button');
+            
+            // Add welcome message
+            addBotMessage("Hi! I'm FitBot, your AI fitness assistant. How can I help you with your workout today?");
+            
+            // Listen for send button click
+            sendButton.addEventListener('click', sendMessage);
+            
+            // Listen for Enter key press
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Category button click
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const query = this.getAttribute('data-query');
+                    chatInput.value = query;
+                    sendMessage();
+                });
+            });
+            
+            // Speech recognition setup
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (SpeechRecognition) {
+                const recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.lang = 'en-US';
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
+                
+                micButton.addEventListener('click', function() {
+                    recognition.start();
+                    micButton.classList.add('recording');
+                    micButton.innerHTML = '<i class="fas fa-circle"></i>';
+                });
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    chatInput.value = transcript;
+                    setTimeout(sendMessage, 500);
+                };
+                
+                recognition.onend = function() {
+                    micButton.classList.remove('recording');
+                    micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error', event.error);
+                    micButton.classList.remove('recording');
+                    micButton.innerHTML = '<i class="fas fa-microphone"></i>';
+                };
+            } else {
+                micButton.style.display = 'none';
+                console.log('Speech recognition not supported');
+            }
+            
+            function sendMessage() {
+                const message = chatInput.value.trim();
+                
+                if (message) {
+                    // Add user message to chat
+                    addUserMessage(message);
+                    
+                    // Clear input
+                    chatInput.value = '';
+                    
+                    // Send to Rasa
+                    fetch('http://localhost:5005/webhooks/rest/webhook', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            sender: 'user',
+                            message: message
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.length > 0) {
+                            data.forEach(msg => {
+                                if (msg.text) {
+                                    processAndDisplayBotResponse(msg.text);
+                                }
+                            });
+                        } else {
+                            addBotMessage("I'm having trouble connecting to my fitness brain. Please try again later.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        addBotMessage("Sorry, I'm having connectivity issues. Please check if the Rasa server is running.");
+                    });
+                }
+            }
+            
+            function addUserMessage(text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message user';
+                messageDiv.textContent = text;
+                chatMessages.appendChild(messageDiv);
+                scrollToBottom();
+            }
+            
+            function addBotMessage(text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message bot';
+                messageDiv.textContent = text;
+                chatMessages.appendChild(messageDiv);
+                scrollToBottom();
+            }
+            
+            function scrollToBottom() {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function processAndDisplayBotResponse(text) {
+                // Check if the message is a workout
+                if (text.includes("Here's your") && text.includes("Workout:")) {
+                    displayWorkoutCard(text);
+                } else {
+                    addBotMessage(text);
+                }
+            }
+            
+            function displayWorkoutCard(text) {
+                // Parse out the components of the workout
+                const lines = text.split('\n');
+                let workoutTitle = '';
+                let duration = '';
+                let equipment = '';
+                let warmup = '';
+                let exercises = [];
+                let footer = '';
+                
+                let currentExercise = null;
+                let parsingExercises = false;
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    
+                    if (line.startsWith("Here's your")) {
+                        workoutTitle = line.replace("Here's your ", '');
+                    } else if (line.startsWith("🔸 Duration:")) {
+                        duration = line.replace("🔸 Duration:", '').trim();
+                    } else if (line.startsWith("🔸 Equipment:")) {
+                        equipment = line.replace("🔸 Equipment:", '').trim();
+                    } else if (line.startsWith("🔸 Warm-up:")) {
+                        warmup = line.replace("🔸 Warm-up:", '').trim();
+                    } else if (line.match(/^\d+\.\s+\*\*.*\*\*$/)) {
+                        // Exercise name line (e.g., "1. **Exercise Name**")
+                        parsingExercises = true;
+                        if (currentExercise) {
+                            exercises.push(currentExercise);
+                        }
+                        currentExercise = {
+                            name: line.replace(/^\d+\.\s+\*\*|\*\*$/g, ''),
+                            details: []
+                        };
+                    } else if (parsingExercises && line.startsWith("   •")) {
+                        // Exercise detail
+                        if (currentExercise) {
+                            currentExercise.details.push(line.replace("   • ", ''));
+                        }
+                    } else if (parsingExercises && line === "") {
+                        // End of exercise details
+                        if (currentExercise) {
+                            exercises.push(currentExercise);
+                            currentExercise = null;
+                        }
+                    } else if (line.startsWith("Remember to stay hydrated")) {
+                        // Footer
+                        footer = line;
+                        if (currentExercise) {
+                            exercises.push(currentExercise);
+                            currentExercise = null;
+                        }
+                    } else if (line.startsWith("For") && line.includes("workout")) {
+                        // Additional goal-specific advice
+                        footer = line + " " + (footer || "");
+                    }
+                }
+                
+                // Create workout card
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'workout-card';
+                
+                // Header
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'workout-header';
+                headerDiv.textContent = workoutTitle;
+                cardDiv.appendChild(headerDiv);
+                
+                // Info
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'workout-info';
+                
+                if (duration) {
+                    const durationDiv = document.createElement('div');
+                    durationDiv.className = 'info-item';
+                    durationDiv.innerHTML = `<i class="fas fa-clock"></i> ${duration}`;
+                    infoDiv.appendChild(durationDiv);
+                }
+                
+                if (equipment) {
+                    const equipmentDiv = document.createElement('div');
+                    equipmentDiv.className = 'info-item';
+                    equipmentDiv.innerHTML = `<i class="fas fa-dumbbell"></i> ${equipment}`;
+                    infoDiv.appendChild(equipmentDiv);
+                }
+                
+                cardDiv.appendChild(infoDiv);
+                
+                // Warmup
+                if (warmup) {
+                    const warmupDiv = document.createElement('div');
+                    warmupDiv.className = 'workout-info';
+                    warmupDiv.innerHTML = `<div class="info-item"><i class="fas fa-fire"></i> Warm-up: ${warmup}</div>`;
+                    cardDiv.appendChild(warmupDiv);
+                }
+                
+                // Exercises
+                const exercisesDiv = document.createElement('div');
+                exercisesDiv.className = 'workout-exercises';
+                
+                exercises.forEach((exercise, index) => {
+                    const exerciseDiv = document.createElement('div');
+                    exerciseDiv.className = 'exercise-item';
+                    
+                    const nameDiv = document.createElement('div');
+                    nameDiv.className = 'exercise-name';
+                    nameDiv.innerHTML = `${index + 1}. ${exercise.name}`;
+                    exerciseDiv.appendChild(nameDiv);
+                    
+                    exercise.details.forEach(detail => {
+                        const detailDiv = document.createElement('div');
+                        detailDiv.className = 'exercise-detail';
+                        
+                        // Add icon based on detail type
+                        if (detail.includes('sets')) {
+                            detailDiv.innerHTML = `<i class="fas fa-layer-group"></i> ${detail}`;
+                        } else if (detail.includes('Rest')) {
+                            detailDiv.innerHTML = `<i class="fas fa-hourglass-half"></i> ${detail}`;
+                        } else if (detail.includes('Tip')) {
+                            detailDiv.innerHTML = `<i class="fas fa-lightbulb"></i> ${detail}`;
+                        } else {
+                            detailDiv.innerHTML = `<i class="fas fa-circle"></i> ${detail}`;
+                        }
+                        
+                        exerciseDiv.appendChild(detailDiv);
+                    });
+                    
+                    exercisesDiv.appendChild(exerciseDiv);
+                });
+                
+                cardDiv.appendChild(exercisesDiv);
+                
+                // Footer
+                if (footer) {
+                    const footerDiv = document.createElement('div');
+                    footerDiv.className = 'workout-footer';
+                    footerDiv.textContent = footer;
+                    cardDiv.appendChild(footerDiv);
+                }
+                
+                chatMessages.appendChild(cardDiv);
+                scrollToBottom();
+            }
+        });
+    </script>
+</body>
+</html>

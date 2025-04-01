@@ -1,0 +1,28 @@
+[
+  {
+    "tag_name": "entity",
+    "ids_to_tags": {
+      "1": "B-duration",
+      "2": "I-duration",
+      "3": "L-duration",
+      "4": "U-duration",
+      "5": "B-equipment",
+      "6": "I-equipment",
+      "7": "L-equipment",
+      "8": "U-equipment",
+      "0": "O"
+    },
+    "tags_to_ids": {
+      "B-duration": 1,
+      "I-duration": 2,
+      "L-duration": 3,
+      "U-duration": 4,
+      "B-equipment": 5,
+      "I-equipment": 6,
+      "L-equipment": 7,
+      "U-equipment": 8,
+      "O": 0
+    },
+    "num_tags": 9
+  }
+]

@@ -1,0 +1,195 @@
+version: "3.1"
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - hey there
+    - what's up
+    - sup
+
+- intent: goodbye
+  examples: |
+    - bye
+    - goodbye
+    - see you around
+    - see you later
+    - catch you later
+    - have a good day
+
+- intent: affirm
+  examples: |
+    - yes
+    - indeed
+    - of course
+    - that sounds good
+    - correct
+    - sure
+
+- intent: deny
+  examples: |
+    - no
+    - never
+    - I don't think so
+    - don't like that
+    - no way
+    - not really
+
+- intent: ask_home_workout
+  examples: |
+    - I need a home workout
+    - What exercises can I do at home?
+    - Give me a workout routine I can do without equipment
+    - home exercises
+    - workout at home
+    - no gym exercises
+    - exercises without equipment
+    - How can I exercise at home?
+    - I want to workout but don't have equipment
+    - What's a good home routine?
+    - I want to exercise at home
+    - Give me something I can do in my living room
+    - Workout without going to the gym
+
+- intent: ask_leg_day_routine
+  examples: |
+    - I need a leg workout
+    - What's a good leg day routine?
+    - Give me exercises for legs
+    - How to build stronger legs?
+    - leg day workout
+    - leg exercises
+    - strengthen my legs
+    - workout for lower body
+    - best exercises for quads and hamstrings
+    - What's a good lower body routine?
+    - I want to train my legs today
+    - My legs need work
+    - Focus on leg muscles
+    - Lower body training
+
+- intent: ask_full_body_workout
+  examples: |
+    - I need a full body workout
+    - What's a good full body routine?
+    - Give me a workout for the entire body
+    - total body exercises
+    - complete body workout
+    - workout routine for all muscles
+    - exercises for whole body
+    - full body training plan
+    - How can I exercise my entire body?
+    - Give me a comprehensive workout
+    - I want to train everything today
+    - Full body session
+    - Workout that hits all muscle groups
+
+- intent: inform_equipment
+  examples: |
+    - I have [dumbbells](equipment)
+    - I have [resistance bands](equipment)
+    - I own [a kettlebell](equipment)
+    - I've got [a yoga mat](equipment)
+    - there's [a pull-up bar](equipment) at home
+    - I can use [bodyweight](equipment) only
+    - I have access to [barbells](equipment)
+    - I only have [dumbbells](equipment)
+    - My equipment is [minimal](equipment)
+    - I use [resistance bands](equipment) mostly
+    - Just [bodyweight](equipment)
+    - I've got [dumbbells](equipment) and [bands](equipment)
+    - only [medicine ball](equipment) available
+    - [no equipment](equipment)
+
+- intent: inform_duration
+  examples: |
+    - I have [15](duration) minutes
+    - I want a [30](duration) minute workout
+    - I can exercise for [45](duration) minutes
+    - [60](duration) minute routine
+    - Quick [20](duration) minute session
+    - I need something under [10](duration) minutes
+    - [40](duration) minutes is my limit
+    - I have [25](duration) minutes available
+    - Just [5](duration) minutes to spare
+    - I can do [50](duration) minutes today
+    - about [35](duration) minutes
+    - [15-20](duration) minutes
+
+- intent: inform_muscle_group
+  examples: |
+    - focus on my [arms](muscle_group)
+    - I want to train my [back](muscle_group)
+    - work on [chest](muscle_group)
+    - strengthen my [legs](muscle_group)
+    - I need to build my [core](muscle_group)
+    - [cardio](muscle_group) training
+    - exercises for [arms](muscle_group)
+    - my [back](muscle_group) needs attention
+    - [chest](muscle_group) day
+    - build my [core](muscle_group) strength
+    - something for my [legs](muscle_group)
+    - [arms](muscle_group) are my priority today
+
+- intent: inform_fitness_goal
+  examples: |
+    - I want to [lose weight](fitness_goal)
+    - help me [build muscle](fitness_goal)
+    - I need to improve my [endurance](fitness_goal)
+    - my goal is [weight loss](fitness_goal)
+    - looking to [gain muscle](fitness_goal)
+    - need to build [stamina](fitness_goal)
+    - I'm trying to [burn fat](fitness_goal)
+    - want to [build strength](fitness_goal)
+    - goal is to increase [cardio](fitness_goal)
+    - I'm focused on [losing weight](fitness_goal)
+    - help with [muscle gain](fitness_goal)
+
+- intent: ask_weight_loss
+  examples: |
+    - What are good exercises for weight loss?
+    - How can I burn fat?
+    - Workouts to help me lose weight
+    - Best fat burning exercises
+    - I need to shed some pounds
+    - Help me burn calories
+    - What's effective for losing weight?
+    - Exercises to slim down
+    - Weight loss routine
+    - How to lose fat
+    - I want to get leaner
+    - Best workouts for burning fat
+
+- intent: ask_muscle_gain
+  examples: |
+    - How can I build muscle?
+    - What's best for gaining mass?
+    - Exercises to increase muscle size
+    - Workouts for muscle growth
+    - I want to get bigger
+    - Help me build more muscle
+    - Mass building workout
+    - What should I do to gain muscle?
+    - Exercises for bigger muscles
+    - I want to get stronger
+    - Routine for muscle development
+    - Best exercises for hypertrophy
+
+- intent: ask_endurance
+  examples: |
+    - How can I improve my endurance?
+    - Exercises for better stamina
+    - Workouts to build cardio
+    - I need to increase my endurance
+    - Help me last longer during exercise
+    - How to have better stamina
+    - Workouts for cardiovascular health
+    - Training for endurance
+    - I get tired too quickly
+    - How to improve my cardio
+    - Stamina building exercises
+    - Routines for better endurance

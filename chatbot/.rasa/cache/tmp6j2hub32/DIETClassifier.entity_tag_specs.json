@@ -1,0 +1,44 @@
+[
+  {
+    "tag_name": "entity",
+    "ids_to_tags": {
+      "1": "B-duration",
+      "2": "I-duration",
+      "3": "L-duration",
+      "4": "U-duration",
+      "5": "B-equipment",
+      "6": "I-equipment",
+      "7": "L-equipment",
+      "8": "U-equipment",
+      "9": "B-fitness_goal",
+      "10": "I-fitness_goal",
+      "11": "L-fitness_goal",
+      "12": "U-fitness_goal",
+      "13": "B-muscle_group",
+      "14": "I-muscle_group",
+      "15": "L-muscle_group",
+      "16": "U-muscle_group",
+      "0": "O"
+    },
+    "tags_to_ids": {
+      "B-duration": 1,
+      "I-duration": 2,
+      "L-duration": 3,
+      "U-duration": 4,
+      "B-equipment": 5,
+      "I-equipment": 6,
+      "L-equipment": 7,
+      "U-equipment": 8,
+      "B-fitness_goal": 9,
+      "I-fitness_goal": 10,
+      "L-fitness_goal": 11,
+      "U-fitness_goal": 12,
+      "B-muscle_group": 13,
+      "I-muscle_group": 14,
+      "L-muscle_group": 15,
+      "U-muscle_group": 16,
+      "O": 0
+    },
+    "num_tags": 17
+  }
+]

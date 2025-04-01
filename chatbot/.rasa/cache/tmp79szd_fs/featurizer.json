@@ -1,0 +1,58 @@
+{
+  "type": "IntentMaxHistoryTrackerFeaturizer",
+  "state_featurizer": {
+    "action_texts": [],
+    "entity_tag_specs": [],
+    "feature_states": {
+      "intent": {
+        "affirm": 0,
+        "ask_full_body_workout": 1,
+        "ask_home_workout": 2,
+        "ask_leg_day_routine": 3,
+        "back": 4,
+        "deny": 5,
+        "goodbye": 6,
+        "greet": 7,
+        "inform_duration": 8,
+        "inform_equipment": 9,
+        "nlu_fallback": 10,
+        "out_of_scope": 11,
+        "restart": 12,
+        "session_start": 13
+      },
+      "action_name": {
+        "action_listen": 0,
+        "action_restart": 1,
+        "action_session_start": 2,
+        "action_default_fallback": 3,
+        "action_deactivate_loop": 4,
+        "action_revert_fallback_events": 5,
+        "action_default_ask_affirmation": 6,
+        "action_default_ask_rephrase": 7,
+        "action_two_stage_fallback": 8,
+        "action_unlikely_intent": 9,
+        "action_back": 10,
+        "...": 11,
+        "action_extract_slots": 12,
+        "utter_greet": 13,
+        "utter_goodbye": 14,
+        "utter_ask_equipment": 15,
+        "utter_ask_duration": 16,
+        "utter_fallback": 17,
+        "action_recommend_workout": 18
+      },
+      "entities": {
+        "duration": 0,
+        "equipment": 1
+      },
+      "slots": {
+        "equipment_0": 0,
+        "duration_0": 1,
+        "workout_type_0": 2
+      },
+      "active_loop": {}
+    }
+  },
+  "remove_duplicates": true,
+  "max_history": 5
+}
