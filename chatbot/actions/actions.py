@@ -12,7 +12,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Muscle mapping for WGER API
+# Muscle mapping for WGER API - directly from ChatterBot implementation
 MUSCLE_MAP = {
     "legs": "10", 
     "arms": "5", 
@@ -22,14 +22,14 @@ MUSCLE_MAP = {
     "cardio": "7"
 }
 
-# Goal to category mapping for WGER API
+# Goal to category mapping for WGER API - directly from ChatterBot implementation
 GOAL_CATEGORY_MAP = {
     "weight_loss": [4, 10],  # Abs and Cardio
     "muscle_gain": [8],      # Arms
     "endurance": [10, 4, 14] # Cardio, Abs, Calves
 }
 
-# Fallback workout responses when API fails
+# Fallback workout responses - directly from ChatterBot implementation
 HOME_WORKOUTS = [
     "Try 3 rounds of 20 squats, 10 push-ups, and 30-sec planks!",
     "Bodyweight circuit: lunges, jumping jacks, and sit-ups (x3 sets).",
@@ -58,10 +58,33 @@ class ActionRecommendWorkout(Action):
            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         
         # Get slot values
-        equipment = tracker.get_slot("equipment")
+        equipment_text = tracker.get_slot("equipment")
         duration = tracker.get_slot("duration")
         muscle_group = tracker.get_slot("muscle_group")
         fitness_goal = tracker.get_slot("fitness_goal")
+        
+        # Parse multiple equipment items
+        equipment_list = []
+        if equipment_text:
+            # Handle different ways equipment might be expressed
+            equipment_text = equipment_text.lower()
+            if "and" in equipment_text:
+                parts = equipment_text.split("and")
+                for part in parts:
+                    equipment_list.extend([e.strip() for e in part.split(",") if e.strip()])
+            else:
+                equipment_list.extend([e.strip() for e in equipment_text.split(",") if e.strip()])
+            
+            # If list is still empty, add the whole text as one item
+            if not equipment_list:
+                equipment_list = [equipment_text]
+                
+        # If no equipment specified, default to bodyweight
+        if not equipment_list:
+            equipment_list = ["bodyweight"]
+        
+        # Format equipment for display
+        equipment_display = ", ".join(equipment_list)
         
         # Determine workout type from intent
         intent = tracker.latest_message.get("intent", {}).get("name", "")
@@ -73,29 +96,35 @@ class ActionRecommendWorkout(Action):
                 muscle_group = "legs"
         elif intent == "ask_full_body_workout":
             workout_type = "full_body"
+        elif intent == "ask_weight_loss":
+            if not fitness_goal:
+                fitness_goal = "weight_loss"
+        elif intent == "ask_muscle_gain":
+            if not fitness_goal:
+                fitness_goal = "muscle_gain"
+        elif intent == "ask_endurance":
+            if not fitness_goal:
+                fitness_goal = "endurance"
         
-        # If slots are missing, use defaults
-        if not equipment:
-            equipment = "bodyweight"
-        
+        # If no duration, use default
         if not duration:
             duration = "30"
         
         try:
-            # If we have a muscle group, fetch exercises for that muscle
-            if muscle_group and muscle_group in MUSCLE_MAP:
-                exercises = self.fetch_exercises_by_muscle(muscle_group)
-                response = self.format_muscle_response(exercises, muscle_group, equipment, duration)
-            
             # If we have a fitness goal, fetch exercises for that goal
-            elif fitness_goal and fitness_goal in GOAL_CATEGORY_MAP:
+            if fitness_goal and fitness_goal in GOAL_CATEGORY_MAP:
                 exercises = self.fetch_exercises_by_goal(fitness_goal)
-                response = self.format_goal_response(exercises, fitness_goal, equipment, duration)
+                response = self.format_goal_response(exercises, fitness_goal, equipment_display, duration)
+            
+            # If we have a muscle group, fetch exercises for that muscle
+            elif muscle_group and muscle_group in MUSCLE_MAP:
+                exercises = self.fetch_exercises_by_muscle(muscle_group)
+                response = self.format_muscle_response(exercises, muscle_group, equipment_display, duration)
             
             # Otherwise determine by workout type
             elif workout_type == "leg_day":
                 exercises = self.fetch_exercises_by_muscle("legs")
-                response = self.format_muscle_response(exercises, "legs", equipment, duration)
+                response = self.format_muscle_response(exercises, "legs", equipment_display, duration)
             
             elif workout_type == "full_body":
                 # For full body, get a mix of exercises
@@ -110,12 +139,12 @@ class ActionRecommendWorkout(Action):
                         all_exercises.append(random.choice(muscle_exercises))
                 
                 if all_exercises:
-                    response = self.format_muscle_response(all_exercises, "full body", equipment, duration)
+                    response = self.format_muscle_response(all_exercises, "full body", equipment_display, duration)
                 else:
                     # Fallback to predefined full body workout
                     response = f"Here's your {duration}-Minute Full Body Workout:\n\n"
                     response += f"🔸 Duration: {duration} minutes\n"
-                    response += f"🔸 Equipment: {equipment}\n"
+                    response += f"🔸 Equipment: {equipment_display}\n"
                     response += f"🔸 Warm-up: 5 minutes of light cardio and dynamic stretching\n\n"
                     response += f"{random.choice(FULL_BODY)}\n\n"
                     response += "Remember to stay hydrated and listen to your body. Don't push through pain!"
@@ -133,12 +162,12 @@ class ActionRecommendWorkout(Action):
                             all_exercises.append(random.choice(muscle_exercises))
                     
                     if all_exercises:
-                        response = self.format_muscle_response(all_exercises, "home", equipment, duration)
+                        response = self.format_muscle_response(all_exercises, "home", equipment_display, duration)
                     else:
                         # Fallback to predefined home workout
                         response = f"Here's your {duration}-Minute Home Workout:\n\n"
                         response += f"🔸 Duration: {duration} minutes\n"
-                        response += f"🔸 Equipment: {equipment}\n"
+                        response += f"🔸 Equipment: {equipment_display}\n"
                         response += f"🔸 Warm-up: 5 minutes of light cardio and dynamic stretching\n\n"
                         response += f"{random.choice(HOME_WORKOUTS)}\n\n"
                         response += "Remember to stay hydrated and listen to your body. Don't push through pain!"
@@ -146,7 +175,7 @@ class ActionRecommendWorkout(Action):
                     logger.error(f"Error generating home workout: {e}")
                     response = f"Here's your {duration}-Minute Home Workout:\n\n"
                     response += f"🔸 Duration: {duration} minutes\n"
-                    response += f"🔸 Equipment: {equipment}\n"
+                    response += f"🔸 Equipment: {equipment_display}\n"
                     response += f"🔸 Warm-up: 5 minutes of light cardio and dynamic stretching\n\n"
                     response += f"{random.choice(HOME_WORKOUTS)}\n\n"
                     response += "Remember to stay hydrated and listen to your body. Don't push through pain!"
@@ -174,7 +203,7 @@ class ActionRecommendWorkout(Action):
             return []
     
     def fetch_exercises_by_muscle(self, muscle_name="legs"):
-        """Fetch exercises from WGER API based on muscle group"""
+        """Fetch exercises from WGER API based on muscle group - straight from ChatterBot implementation"""
         muscle_id = MUSCLE_MAP.get(muscle_name.lower(), "10")
         try:
             url = f"https://wger.de/api/v2/exerciseinfo/?language=2&limit=20&muscles={muscle_id}"
@@ -201,7 +230,7 @@ class ActionRecommendWorkout(Action):
             return [f"Couldn't fetch exercises right now. API error: {e}"]
     
     def fetch_exercises_by_goal(self, goal):
-        """Fetch exercises from WGER API based on fitness goal"""
+        """Fetch exercises from WGER API based on fitness goal - straight from ChatterBot implementation"""
         categories = GOAL_CATEGORY_MAP.get(goal, [])
         exercises = []
 
@@ -350,7 +379,7 @@ class ActionExtractMuscleGroup(Action):
         
         text = tracker.latest_message.get("text", "").lower()
         
-        # Check for muscle groups in the text
+        # Check for muscle groups in the text - from ChatterBot implementation
         for muscle in MUSCLE_MAP.keys():
             if muscle in text:
                 return [SlotSet("muscle_group", muscle)]
@@ -371,7 +400,7 @@ class ActionExtractFitnessGoal(Action):
         
         text = tracker.latest_message.get("text", "").lower()
         
-        # Check for fitness goals in the text
+        # Check for fitness goals in the text - inspired by ChatterBot regex patterns
         if re.search(r"lose.*weight|burn.*fat|fat.*loss|weight.*loss", text):
             return [SlotSet("fitness_goal", "weight_loss")]
         elif re.search(r"gain.*muscle|build.*muscle|muscle.*gain", text):
